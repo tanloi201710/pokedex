@@ -2,20 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #000000;
   }
-}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  .dark {
+    --background: #1a1a1a;
+    --foreground: #ffffff;
+  }
+
+  /* Add smooth transition for theme changes */
+  * {
+    @apply transition-colors duration-75;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground;
+  }
 }
