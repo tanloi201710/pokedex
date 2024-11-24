@@ -106,6 +106,7 @@ export default async function PokemonPage({ params }: PageProps) {
       </main>
     );
   } catch (error) {
+    console.log(error);
     notFound();
   }
 }

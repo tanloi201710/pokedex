@@ -3,8 +3,21 @@ const MAX_RETRIES = 2;
 
 export async function fetchWithRetry(
   url: string,
-  options: RequestInit & { timeout?: number } = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options: RequestInit & { timeout?: number; next?: any } = {}
 ) {
+  const { next, ...fetchOptions } = options;
+  
+  const cacheOptions = {
+    ...fetchOptions,
+    next: {
+      ...next,
+      revalidate: next?.revalidate || 3600,
+      tags: next?.tags || ['pokemon'],
+    },
+    cache: 'force-cache' as RequestCache,
+  };
+
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
@@ -16,9 +29,10 @@ export async function fetchWithRetry(
       );
 
       const response = await fetch(url, {
-        ...options,
+        ...fetchOptions,
         signal: controller.signal,
-        cache: 'force-cache', // Use full route cache
+        next: cacheOptions.next,
+        cache: cacheOptions.cache,
       });
 
       clearTimeout(timeoutId);
@@ -31,13 +45,11 @@ export async function fetchWithRetry(
     } catch (error: unknown) {
       lastError = error as Error;
       
-      // Only retry on network errors or timeouts
       if (!(error instanceof Error && 
           (error.name === "AbortError" || error.name === "TypeError"))) {
         throw error;
       }
 
-      // Use shorter delay for retries
       if (attempt < MAX_RETRIES - 1) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }

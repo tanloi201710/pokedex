@@ -1,4 +1,4 @@
-import { Pokemon, PokemonList } from "@/types/pokemon";
+import { Pokemon } from "@/types/pokemon";
 import { toast } from "sonner";
 import { fetchWithRetry } from "./fetchWithRetry";
 
@@ -78,7 +78,7 @@ export async function getPokemonList(
   }
 }
 
-export async function getPokemonCount(search?: string): Promise<number> {
+export async function getPokemonCount(): Promise<number> {
   try {
     const response = await fetchWithRetry(
       "https://pokeapi.co/api/v2/pokemon?limit=1",

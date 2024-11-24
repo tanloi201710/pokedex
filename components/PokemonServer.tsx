@@ -1,4 +1,4 @@
-import { getPokemonCount, getPokemonList } from "@/lib/pokemon";
+import { getPokemonCount } from "@/lib/pokemon";
 import PokemonGrid from "./PokemonGrid";
 import PokemonServerWrapper from "./PokemonServerWrapper";
 import ErrorMessage from "./ErrorMessage";
@@ -16,7 +16,7 @@ export default async function PokemonServer({
 }: PokemonServerProps) {
   try {
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const count = await getPokemonCount(search);
+    const count = await getPokemonCount();
     const totalPages = Math.ceil(count / ITEMS_PER_PAGE);
 
     return (
